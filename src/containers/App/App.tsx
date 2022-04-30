@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import ToDoPage from './ToDoPage';
+import ToDoPage from "src/containers/Todo";
 
-import './App.css';
+import "./App.css";
 
 function App() {
   return (
