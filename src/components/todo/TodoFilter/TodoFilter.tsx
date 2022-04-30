@@ -1,16 +1,17 @@
 import React from "react";
-import { TodoStatus } from "src/models/todo";
 
 export interface TodoFilterProps {
   onShowActive: () => void;
   onShowCompleted: () => void;
   onShowAll: () => void;
+  onDeleteAllTodo: () => void;
 }
 
 const TodoFilter = ({
   onShowActive,
   onShowAll,
   onShowCompleted,
+  onDeleteAllTodo,
 }: TodoFilterProps) => {
   return (
     <>
@@ -26,9 +27,9 @@ const TodoFilter = ({
             Completed
           </button>
         </div>
-        {/* <button className="Action__btn" onClick={onDeleteAllTodo}>
+        <button className="Action__btn" onClick={onDeleteAllTodo}>
           Clear all todos
-        </button> */}
+        </button>
       </div>
     </>
   );

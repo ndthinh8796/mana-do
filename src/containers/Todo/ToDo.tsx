@@ -5,6 +5,7 @@ import {
   toggleAllTodos,
   deleteAllTodos,
   updateTodoStatus,
+  deleteTodo,
 } from "src/store/actions";
 import Service from "src/service";
 import { TodoStatus } from "src/models/todo";
@@ -22,7 +23,6 @@ const ToDoPage = () => {
   useEffect(() => {
     (async () => {
       const resp = await Service.getTodos();
-      console.log(resp);
 
       dispatch(setTodos(resp || []));
     })();
@@ -39,22 +39,38 @@ const ToDoPage = () => {
   const onUpdateTodoStatus = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>, todoId: any) => {
       const checked = e.target.checked;
+      dispatch(updateTodoStatus(todoId, checked));
       await Service.updateTodoStatus(
         todoId,
         checked ? TodoStatus.COMPLETED : TodoStatus.ACTIVE
       );
-      dispatch(updateTodoStatus(todoId, checked));
     },
     [dispatch]
   );
 
-  const onToggleAllTodo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(toggleAllTodos(e.target.checked));
-  };
+  const onToggleAllTodo = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = e.target.checked;
+      dispatch(toggleAllTodos(checked));
+      await Service.updateAllTodoStatus(
+        checked ? TodoStatus.COMPLETED : TodoStatus.ACTIVE
+      );
+    },
+    [dispatch]
+  );
 
-  const onDeleteAllTodo = () => {
+  const onDeleteAllTodo = useCallback(async () => {
     dispatch(deleteAllTodos());
-  };
+    await Service.deleteAllTodos();
+  }, [dispatch]);
+
+  const onDeleteTodo = useCallback(
+    async (id: string) => {
+      dispatch(deleteTodo(id));
+      await Service.deleteTodo(id);
+    },
+    [dispatch]
+  );
 
   const showActiveTodo = useCallback(() => {
     setShowing(TodoStatus.ACTIVE);
@@ -80,8 +96,14 @@ const ToDoPage = () => {
         onShowActive={showActiveTodo}
         onShowCompleted={showCompletedTodo}
         onShowAll={showAllTodo}
+        onDeleteAllTodo={onDeleteAllTodo}
       />
-      <TodoList todos={filteredTodos} onUpdateTodoStatus={onUpdateTodoStatus} />
+      <TodoList
+        onToggleAllTodo={onToggleAllTodo}
+        todos={filteredTodos}
+        onUpdateTodoStatus={onUpdateTodoStatus}
+        onDeleteTodo={onDeleteTodo}
+      />
     </div>
   );
 };

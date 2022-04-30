@@ -43,12 +43,24 @@ class ApiFrontend extends IAPI {
     return Promise.resolve(localStorage.setItem("todo", JSON.stringify(todos)));
   }
 
+  async updateAllTodoStatus(status: TodoStatus): Promise<void> {
+    const todos: TodoResult = JSON.parse(localStorage.getItem("todo") || "{}");
+    Object.keys(todos).forEach(
+      (key) => (todos[key] = { ...todos[key], status })
+    );
+    return Promise.resolve(localStorage.setItem("todo", JSON.stringify(todos)));
+  }
+
   async deleteTodo(id: string): Promise<void> {
     const todos: TodoResult = JSON.parse(localStorage.getItem("todo") || "{}");
 
     delete todos[id];
 
     return Promise.resolve(localStorage.setItem("todo", JSON.stringify(todos)));
+  }
+
+  async deleteAllTodos(): Promise<void> {
+    return Promise.resolve(localStorage.setItem("todo", "{}"));
   }
 }
 

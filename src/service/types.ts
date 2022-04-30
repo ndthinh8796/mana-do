@@ -6,6 +6,8 @@ export abstract class IAPI {
   abstract updateTodoContent(id: string, content: string): Promise<void>;
   abstract updateTodoStatus(id: string, status: TodoStatus): Promise<void>;
   abstract deleteTodo(id: string): Promise<void>;
+  abstract deleteAllTodos(): Promise<void>;
+  abstract updateAllTodoStatus(status: TodoStatus): Promise<void>;
 }
 
 export type TodoResult = Record<string, Todo>;
